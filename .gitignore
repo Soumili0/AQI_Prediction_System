@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+pip-wheel-metadata/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+coverage_report/
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+frontend/dist/
+frontend/.vite/
+
+# ML artefacts (large binary files — track with Git LFS if needed)
+ml/models/aqi_model.pkl
+ml/models/scaler.pkl
+ml/models/lstm_model/
+ml/data/raw/*.csv
+ml/data/processed/*.csv
+
+# Uploads & reports
+backend/uploads/
+reports/*.pdf
+reports/*.csv
+
+# Logs
+*.log
+backend/logs/
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+ehthumbs.db

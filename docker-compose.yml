@@ -1,0 +1,101 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AI AQI Prediction System — Docker Compose
+# Services: db (MySQL 8), backend (Flask/Gunicorn), frontend (React/Nginx)
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── MySQL Database ──────────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: aqi_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE:      ${DB_NAME:-aqi_prediction_db}
+      MYSQL_USER:          ${DB_USER:-aqi_user}
+      MYSQL_PASSWORD:      ${DB_PASSWORD:-aqi_password}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/seeds:/docker-entrypoint-initdb.d/seeds:ro
+    ports:
+      - "3306:3306"
+    networks:
+      - aqi_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
+             "-u", "root", "-p${DB_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ── Flask Backend ────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: aqi_backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      FLASK_ENV:    ${FLASK_ENV:-production}
+      DATABASE_URL: mysql+mysqlclient://${DB_USER:-aqi_user}:${DB_PASSWORD:-aqi_password}@db:3306/${DB_NAME:-aqi_prediction_db}
+    volumes:
+      - ./ml/models:/app/ml/models:ro
+      - ./backend/logs:/app/logs
+      - ./backend/uploads:/app/uploads
+      - ./reports:/app/reports
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - aqi_network
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/api/v1/analytics/overview')\""]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ── React Frontend (Nginx) ───────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: aqi_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - aqi_network
+
+  # ── DB Admin (optional, dev only) ────────────────────────────────────────
+  adminer:
+    image: adminer:latest
+    container_name: aqi_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - aqi_network
+    profiles:
+      - dev   # only started with: docker compose --profile dev up
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  aqi_network:
+    driver: bridge

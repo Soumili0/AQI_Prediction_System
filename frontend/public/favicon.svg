@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1e3a5f"/>
+      <stop offset="100%" stop-color="#2d6a4f"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#g)"/>
+  <!-- Globe outline -->
+  <circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-width="3" opacity="0.9"/>
+  <!-- Latitude lines -->
+  <ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <!-- Meridian -->
+  <path d="M50 20 Q62 35 62 50 Q62 65 50 80" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <path d="M50 20 Q38 35 38 50 Q38 65 50 80" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+  <!-- Air wave -->
+  <path d="M28 58 Q35 52 42 58 Q49 64 56 58 Q63 52 70 58" fill="none" stroke="#00e400" stroke-width="3" stroke-linecap="round"/>
+</svg>
