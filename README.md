@@ -108,7 +108,7 @@ The **AI-Based AQI Prediction System** is a production-ready, full-stack web app
 ## 4. Project Structure
 
 ```
-AI_AQI_Prediction_System/
+AQI_Prediction_System/
 │
 ├── backend/                        # Flask REST API
 │   ├── app/
@@ -220,7 +220,7 @@ The fastest way to run the entire stack locally.
 ```bash
 # 1. Clone the repository
 git clone https://github.com/your-org/AQI_Prediction_System.git
-cd AI_AQI_Prediction_System
+cd AQI_Prediction_System
 
 # 2. Copy and configure environment variables
 cp backend/.env.example backend/.env
@@ -570,52 +570,6 @@ Coverage threshold is set to **70%** in `pytest.ini`. The CI pipeline fails if c
 
 ## 14. Deployment
 
-### Frontend → Vercel
-
-```bash
-cd frontend
-npm run build
-
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy (follow prompts)
-vercel --prod
-
-# Set environment variable in Vercel dashboard:
-# VITE_API_URL = https://your-backend.onrender.com/api/v1
-```
-
-`vercel.json`:
-```json
-{
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
-}
-```
-
-### Backend → Render
-
-1. Push code to GitHub.
-2. Create a new **Web Service** on [render.com](https://render.com).
-3. Set:
-   - **Build Command:** `pip install -r requirements.txt`
-   - **Start Command:** `gunicorn run:app`
-   - **Environment Variables:** all keys from `.env.example`
-4. Add a **MySQL** (or PostgreSQL) database service on Render or use [Railway](https://railway.app) / [Aiven](https://aiven.io).
-
-### Database → Railway
-
-```bash
-# Install Railway CLI
-npm i -g @railway/cli
-railway login
-railway init
-railway add mysql
-railway up
-```
-
-Copy the `DATABASE_URL` from Railway dashboard into your Render environment variables.
-
 ### GitHub Actions CI/CD
 
 The workflow at `.github/workflows/ci.yml` runs on every push to `main`:
@@ -671,4 +625,5 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ---
 
-*Built with ❤️ — AI AQI Prediction System © 2025*
+*Built with ❤️ — AQI Prediction System © 2026*
+@Mili
