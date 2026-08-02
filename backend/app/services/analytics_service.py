@@ -32,12 +32,20 @@ def _get_advisory(aqi: float) -> str:
 
 def get_aqi_overview(city: str = None, days: int = 30) -> dict:
     """Current AQI stats: mean, min, max, category breakdown."""
+    # If days is small and no recent data, fall back to all data
     since = datetime.utcnow() - timedelta(days=days)
     q = AQIReading.query.filter(AQIReading.recorded_at >= since)
     if city:
         q = q.filter(AQIReading.city.ilike(f"%{city}%"))
 
     readings = q.all()
+
+    # Fallback: if no recent data, use all available data
+    if not readings:
+        q2 = AQIReading.query
+        if city:
+            q2 = q2.filter(AQIReading.city.ilike(f"%{city}%"))
+        readings = q2.order_by(AQIReading.recorded_at.desc()).limit(10000).all()
     if not readings:
         return {"message": "No data available for the specified parameters."}
 
@@ -84,6 +92,18 @@ def get_aqi_trend(city: str = None, granularity: str = "daily",
         q = q.filter(AQIReading.city.ilike(f"%{city}%"))
 
     rows = q.all()
+
+    # Fallback: if no data in requested window, use most recent 5000 rows
+    if not rows:
+        q2 = (db.session.query(
+                AQIReading.recorded_at,
+                AQIReading.aqi,
+                AQIReading.city,
+              )
+              .filter(AQIReading.aqi.isnot(None)))
+        if city:
+            q2 = q2.filter(AQIReading.city.ilike(f"%{city}%"))
+        rows = q2.order_by(AQIReading.recorded_at.desc()).limit(5000).all()
     if not rows:
         return {"trend": [], "granularity": granularity}
 
@@ -151,6 +171,11 @@ def get_pollutant_averages(city: str = None, days: int = 30) -> dict:
         q = q.filter(AQIReading.city.ilike(f"%{city}%"))
 
     rows = q.all()
+    if not rows:
+        q2 = AQIReading.query
+        if city:
+            q2 = q2.filter(AQIReading.city.ilike(f"%{city}%"))
+        rows = q2.order_by(AQIReading.recorded_at.desc()).limit(5000).all()
     if not rows:
         return {"pollutants": {}}
 

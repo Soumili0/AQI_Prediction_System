@@ -57,10 +57,20 @@ class BaseConfig:
     RATELIMIT_DEFAULT: str = os.getenv("RATELIMIT_DEFAULT", "200 per day;50 per hour")
     RATELIMIT_STORAGE_URL: str = os.getenv("RATELIMIT_STORAGE_URL", "memory://")
 
-    # ML
-    MODEL_PATH: str = os.getenv("MODEL_PATH", "ml/models/aqi_model.pkl")
-    SCALER_PATH: str = os.getenv("SCALER_PATH", "ml/models/scaler.pkl")
-    FEATURE_NAMES_PATH: str = os.getenv("FEATURE_NAMES_PATH", "ml/models/feature_names.json")
+    # ML — resolve paths relative to project root (one level above backend/)
+    _BASE_DIR: str = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+    MODEL_PATH: str = os.getenv(
+        "MODEL_PATH",
+        os.path.join(_BASE_DIR, "ml", "models", "aqi_model.pkl")
+    )
+    SCALER_PATH: str = os.getenv(
+        "SCALER_PATH",
+        os.path.join(_BASE_DIR, "ml", "models", "scaler.pkl")
+    )
+    FEATURE_NAMES_PATH: str = os.getenv(
+        "FEATURE_NAMES_PATH",
+        os.path.join(_BASE_DIR, "ml", "models", "feature_names.json")
+    )
 
     # OpenAQ
     OPENAQ_API_KEY: str = os.getenv("OPENAQ_API_KEY", "")

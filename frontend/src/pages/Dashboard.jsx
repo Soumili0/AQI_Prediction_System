@@ -39,7 +39,7 @@ export default function Dashboard() {
       if (ovRes.status === 'fulfilled')    setOverview(ovRes.value.data);
       if (trendRes.status === 'fulfilled') setTrend(trendRes.value.data.trend || []);
       if (pollRes.status === 'fulfilled')  setPollutants(pollRes.value.data.pollutants || {});
-      if (predRes.status === 'fulfilled')  setRecentPreds(predRes.value.data.predictions || []);
+      if (predRes.status === 'fulfilled')  setRecentPreds(predRes.value.data?.predictions || []);
       if (cityRes.status === 'fulfilled')  setCities(cityRes.value.data.cities || []);
     } catch {
       toast.error('Failed to load dashboard data.');
@@ -77,7 +77,10 @@ export default function Dashboard() {
             onChange={e => setSelectedCity(e.target.value)}
           >
             <option value="">All Cities</option>
-            {cities.map(c => <option key={c} value={c}>{c}</option>)}
+            {cities.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+            ))}
           </select>
           <button onClick={fetchAll} className="btn-outline py-2 px-3">
             <MdRefresh size={18} />

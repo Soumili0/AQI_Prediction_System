@@ -78,8 +78,10 @@ def get_predictor() -> AQIPredictor:
         scaler_path  = current_app.config.get("SCALER_PATH",   "ml/models/scaler.pkl")
         feature_path = current_app.config.get("FEATURE_NAMES_PATH", "ml/models/feature_names.json")
 
-        # Resolve relative paths from project root
-        root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
+        # Resolve relative paths — go up 3 levels from backend/app/ml/ to project root
+        root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
         if not os.path.isabs(model_path):
             model_path   = os.path.join(root, model_path)
         if not os.path.isabs(scaler_path):

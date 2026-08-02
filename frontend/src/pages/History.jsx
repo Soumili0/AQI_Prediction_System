@@ -40,7 +40,9 @@ export default function History() {
         <div className="flex flex-wrap items-center gap-2">
           <select className="input w-auto text-sm" value={city} onChange={e => { setCity(e.target.value); setPage(1); }}>
             <option value="">All Cities</option>
-            {cities.map(c => <option key={c} value={c}>{c}</option>)}
+            {cities.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
           </select>
           <input type="date" className="input w-auto text-sm" value={dateFrom}
             onChange={e => setDateFrom(e.target.value)} placeholder="From" />

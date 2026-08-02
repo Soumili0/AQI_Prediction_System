@@ -200,7 +200,7 @@ def generate_pdf_analytics(city: str = None, days: int = 30) -> bytes:
     # Overview
     pdf.set_font("Helvetica", "B", 13)
     pdf.set_text_color(30, 58, 95)
-    pdf.cell(0, 8, f"Overview — Last {days} Days | {city or 'All Cities'}", ln=True)
+    pdf.cell(0, 8, f"Overview - Last {days} Days | {city or 'All Cities'}", ln=True)
     pdf.set_font("Helvetica", "", 11)
     pdf.set_text_color(50, 50, 50)
     for k, v in overview.items():
