@@ -203,9 +203,9 @@ AI_AQI_Prediction_System/
 
 ## 5. Prerequisites
 
-| Tool | Minimum Version | Install |
-|---|---|---|
-| Python | 3.11 | [python.org](https://python.org) |
+| Technology | Version | Website |
+|------------|---------|---------|
+| Python | 3.13 | [python.org](https://python.org) |
 | Node.js | 20 LTS | [nodejs.org](https://nodejs.org) |
 | MySQL | 8.0 | [mysql.com](https://mysql.com) |
 | Docker | 24 | [docker.com](https://docker.com) |
