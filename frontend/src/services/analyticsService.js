@@ -8,5 +8,5 @@ export const analyticsService = {
   getModels:       ()                            => api.get('/analytics/models'),
   getPredStats:    (days = 30)                   => api.get('/analytics/prediction-stats', { params: { days } }),
   getHistory:      (city, page = 1, per = 50)    => api.get('/history/', { params: { city, page, per_page: per } }),
-  getCityList:     ()                            => api.get('/history/cities'),
+  getCityList:     ()                            => api.get('/analytics/cities'),
 };

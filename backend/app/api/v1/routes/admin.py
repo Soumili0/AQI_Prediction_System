@@ -124,7 +124,7 @@ def update_user(user_id):
       200:
         description: User updated
     """
-    admin_id = get_jwt_identity()
+    admin_id = int(get_jwt_identity())
     user     = User.query.get(user_id)
     if not user:
         return jsonify({"error": "User not found."}), 404
@@ -155,7 +155,7 @@ def update_user(user_id):
 @jwt_required()
 @admin_required
 def delete_user(user_id):
-    admin_id = get_jwt_identity()
+    admin_id = int(get_jwt_identity())
     if admin_id == user_id:
         return jsonify({"error": "Cannot delete your own account."}), 400
     user = User.query.get(user_id)
@@ -194,7 +194,7 @@ def admin_delete_dataset(dataset_id):
     db.session.delete(dataset)
     db.session.commit()
     log_action("admin.delete_dataset", entity="datasets",
-               entity_id=dataset_id, user_id=get_jwt_identity())
+               entity_id=dataset_id, user_id=int(get_jwt_identity()))
     return jsonify({"message": "Dataset deleted."}), 200
 
 
@@ -228,7 +228,7 @@ def list_models():
 @admin_required
 def activate_model(model_id):
     """Set a model as the active production model."""
-    admin_id = get_jwt_identity()
+    admin_id = int(get_jwt_identity())
     model = MLModel.query.get(model_id)
     if not model:
         return jsonify({"error": "Model not found."}), 404

@@ -19,6 +19,17 @@ from app.models.prediction import Prediction
 from app.models.ml_model import MLModel
 
 
+def _get_advisory(aqi: float) -> str:
+    if aqi is None:
+        return "Monitor air quality regularly."
+    if aqi <= 50:   return "Air quality is good. Enjoy outdoor activities."
+    if aqi <= 100:  return "Air quality is acceptable. Sensitive individuals should limit prolonged outdoor exertion."
+    if aqi <= 200:  return "Members of sensitive groups may experience health effects. General public is less likely to be affected."
+    if aqi <= 300:  return "Everyone may begin to experience health effects. Sensitive groups should avoid outdoor exertion."
+    if aqi <= 400:  return "Health alert: everyone may experience serious health effects. Avoid outdoor activities."
+    return "Emergency conditions. Everyone should avoid all outdoor activities."
+
+
 def get_aqi_overview(city: str = None, days: int = 30) -> dict:
     """Current AQI stats: mean, min, max, category breakdown."""
     since = datetime.utcnow() - timedelta(days=days)
@@ -34,6 +45,10 @@ def get_aqi_overview(city: str = None, days: int = 30) -> dict:
     if not aqi_values:
         return {"message": "No AQI values found."}
 
+    # Latest reading for current AQI
+    latest = max((r for r in readings if r.aqi is not None),
+                 key=lambda r: r.recorded_at, default=None)
+
     category_counts = {}
     for r in readings:
         if r.aqi_category:
@@ -43,7 +58,9 @@ def get_aqi_overview(city: str = None, days: int = 30) -> dict:
         "period_days": days,
         "city": city or "All",
         "total_readings": len(aqi_values),
-        "current_aqi": round(aqi_values[-1], 2) if aqi_values else None,
+        "current_aqi": round(float(latest.aqi), 2) if latest else None,
+        "aqi_category": latest.aqi_category if latest else None,
+        "health_advisory": _get_advisory(latest.aqi) if latest else None,
         "mean_aqi":   round(sum(aqi_values) / len(aqi_values), 2),
         "min_aqi":    round(min(aqi_values), 2),
         "max_aqi":    round(max(aqi_values), 2),

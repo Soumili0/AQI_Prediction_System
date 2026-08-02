@@ -40,6 +40,7 @@ class BaseConfig:
     JWT_TOKEN_LOCATION: list = ["headers"]
     JWT_HEADER_NAME: str = "Authorization"
     JWT_HEADER_TYPE: str = "Bearer"
+    JWT_DECODE_LEEWAY: int = 10
 
     # Email
     MAIL_SERVER: str = os.getenv("MAIL_SERVER", "smtp.gmail.com")

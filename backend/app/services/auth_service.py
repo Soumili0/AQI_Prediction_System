@@ -75,6 +75,11 @@ def register_user(data: dict) -> dict:
     role = Role.query.filter_by(name=role_name).first()
     if not role:
         role = Role.query.filter_by(name="citizen").first()
+    if not role:
+        # Last resort — use the first available role
+        role = Role.query.order_by(Role.id).first()
+    if not role:
+        raise ValueError("No roles configured. Please contact the administrator.")
 
     verify_token = secrets.token_urlsafe(48)
 
@@ -88,7 +93,7 @@ def register_user(data: dict) -> dict:
         country=(data.get("country") or "").strip() or None,
         role_id=role.id,
         verify_token=verify_token,
-        is_verified=False,
+        is_verified=True,   # dev: auto-verified; set False in production
     )
     user.set_password(password)
 
@@ -143,15 +148,18 @@ def login_user(email: str, password: str) -> dict:
     user.last_login = datetime.utcnow()
     db.session.commit()
 
-    access_token = create_access_token(identity=user.id)
-    refresh_token_str = create_refresh_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
+    refresh_token_str = create_refresh_token(identity=str(user.id))
 
     # Persist refresh token for revocation support
-    decoded = decode_token(refresh_token_str)
-    expires_at = datetime.utcfromtimestamp(decoded["exp"])
-    rt = RefreshToken(user_id=user.id, jti=decoded["jti"], expires_at=expires_at)
-    db.session.add(rt)
-    db.session.commit()
+    try:
+        decoded = decode_token(refresh_token_str)
+        expires_at = datetime.utcfromtimestamp(decoded["exp"])
+        rt = RefreshToken(user_id=user.id, jti=decoded["jti"], expires_at=expires_at)
+        db.session.add(rt)
+        db.session.commit()
+    except Exception as exc:
+        current_app.logger.warning("Could not persist refresh token: %s", exc)
 
     log_action("user.login", entity="users", entity_id=user.id, user_id=user.id)
 
@@ -180,16 +188,16 @@ def refresh_access_token(jti: str, user_id: int) -> dict:
     Raises:
         ValueError: if token is revoked or not found.
     """
-    token_record = RefreshToken.query.filter_by(jti=jti, user_id=user_id).first()
+    token_record = RefreshToken.query.filter_by(jti=jti, user_id=int(user_id)).first()
 
     if not token_record or not token_record.is_valid():
         raise ValueError("Refresh token is invalid or has been revoked.")
 
-    user = User.query.get(user_id)
+    user = User.query.get(int(user_id))
     if not user or not user.is_active:
         raise ValueError("User not found or account is deactivated.")
 
-    new_access_token = create_access_token(identity=user_id)
+    new_access_token = create_access_token(identity=str(user_id))
     return {"access_token": new_access_token, "token_type": "Bearer"}
 
 

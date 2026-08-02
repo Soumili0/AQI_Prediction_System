@@ -58,7 +58,7 @@ def upload_dataset():
       400:
         description: Validation error
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     if "file" not in request.files:
         return jsonify({"error": "No file provided."}), 400
@@ -113,7 +113,7 @@ def fetch_openaq():
       400:
         description: API error or no data
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json(silent=True) or {}
 
     required = ["city", "country", "date_from", "date_to"]
@@ -149,7 +149,7 @@ def list_datasets():
       200:
         description: List of datasets
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     include_public = request.args.get("include_public", "true").lower() == "true"
     datasets = dataset_service.get_dataset_list(user_id, include_public)
     return jsonify({"datasets": datasets, "count": len(datasets)}), 200
@@ -206,7 +206,7 @@ def delete_dataset(dataset_id):
       404:
         description: Not found
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     try:
         dataset_service.delete_dataset(dataset_id, user_id)
         return jsonify({"message": "Dataset deleted successfully."}), 200

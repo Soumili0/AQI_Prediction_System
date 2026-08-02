@@ -141,6 +141,6 @@ def get_pred_stats():
       200:
         description: Prediction stats
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     days    = int(request.args.get("days", 30))
     return jsonify(analytics_service.get_prediction_stats(user_id=user_id, days=days)), 200

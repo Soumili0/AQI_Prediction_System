@@ -28,7 +28,7 @@ def list_reports():
       200:
         description: List of report metadata
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     return jsonify({"reports": report_service.list_reports(user_id)}), 200
 
 
@@ -56,7 +56,7 @@ def generate_prediction_report():
       200:
         description: File download
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data    = request.get_json(silent=True) or {}
     fmt     = data.get("format", "csv").lower()
     filters = {k: data.get(k) for k in ("city", "date_from", "date_to") if data.get(k)}
@@ -101,7 +101,7 @@ def generate_analytics_report():
       200:
         description: File download
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data    = request.get_json(silent=True) or {}
     fmt     = data.get("format", "pdf").lower()
     city    = data.get("city")

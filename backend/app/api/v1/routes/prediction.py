@@ -57,7 +57,8 @@ def predict():
     user_id = None
     try:
         verify_jwt_in_request(optional=True)
-        user_id = get_jwt_identity()
+        uid = get_jwt_identity()
+        user_id = int(uid) if uid else None
     except Exception:
         pass
 
@@ -159,7 +160,7 @@ def prediction_history():
       200:
         description: Paginated prediction history
     """
-    user_id  = get_jwt_identity()
+    user_id  = int(get_jwt_identity())
     page     = int(request.args.get("page", 1))
     per_page = min(int(request.args.get("per_page", 20)), 100)
     result   = prediction_service.get_prediction_history(user_id, page, per_page)
@@ -187,7 +188,7 @@ def get_prediction(pred_id):
       404:
         description: Not found
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     from app.models.prediction import Prediction
     from app.models.user import User
     pred = Prediction.query.get(pred_id)

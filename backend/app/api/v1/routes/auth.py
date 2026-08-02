@@ -133,7 +133,7 @@ def refresh():
       401:
         description: Invalid or revoked refresh token
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     jti = get_jwt()["jti"]
 
     try:
@@ -286,7 +286,7 @@ def get_profile():
       401:
         description: Unauthorized
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     try:
         profile = auth_service.get_user_profile(user_id)
         return jsonify({"user": profile}), 200
@@ -328,7 +328,7 @@ def update_profile():
       400:
         description: Validation error
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json(silent=True) or {}
 
     try:
@@ -367,7 +367,7 @@ def change_password():
       400:
         description: Incorrect current password or weak new password
     """
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json(silent=True) or {}
     current_pw = data.get("current_password", "")
     new_pw = data.get("new_password", "")
