@@ -1,7 +1,7 @@
 # 🌍 AI-Based Air Quality Index Prediction System
 ### Explainable Environmental Analytics Using Public Sensor Data
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.0-black?logo=flask)](https://flask.palletsprojects.com)
 [![React](https://img.shields.io/badge/React-18-61dafb?logo=react)](https://react.dev)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange?logo=mysql)](https://mysql.com)
