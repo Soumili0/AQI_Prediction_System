@@ -1,0 +1,18 @@
+[
+  "pm25",
+  "pm10",
+  "no2",
+  "so2",
+  "co",
+  "o3",
+  "temperature",
+  "humidity",
+  "wind_speed",
+  "rain",
+  "hour",
+  "day_of_week",
+  "month",
+  "year",
+  "is_weekend",
+  "season"
+]

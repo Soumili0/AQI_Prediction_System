@@ -220,7 +220,7 @@ The fastest way to run the entire stack locally.
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/AI_AQI_Prediction_System.git
+git clone https://github.com/your-org/AQI_Prediction_System.git
 cd AI_AQI_Prediction_System
 
 # 2. Copy and configure environment variables

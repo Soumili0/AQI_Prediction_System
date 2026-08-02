@@ -5,6 +5,10 @@ Uses the factory pattern to allow multiple configurations (dev, test, prod)
 and makes testing easier by avoiding a global app instance.
 """
 
+# PyMySQL as MySQLdb drop-in replacement (required for Python 3.13+)
+import pymysql
+pymysql.install_as_MySQLdb()
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate

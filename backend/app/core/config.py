@@ -123,7 +123,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG: bool = True
     SQLALCHEMY_DATABASE_URI: str = os.getenv(
         "DATABASE_URL",
-        "mysql+mysqlclient://root:password@localhost:3306/aqi_prediction_db",
+        "mysql+pymysql://root:password@localhost:3306/aqi_prediction_db",
     )
     SQLALCHEMY_ECHO: bool = True
 

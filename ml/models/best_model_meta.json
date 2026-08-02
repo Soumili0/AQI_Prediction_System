@@ -1,0 +1,29 @@
+{
+  "model": "Random Forest",
+  "mae": 0.1243,
+  "mse": 1.4599,
+  "rmse": 1.2083,
+  "r2": 0.9998,
+  "train_time_s": 34.95,
+  "train_size": 70137,
+  "test_size": 17535,
+  "features": [
+    "pm25",
+    "pm10",
+    "no2",
+    "so2",
+    "co",
+    "o3",
+    "temperature",
+    "humidity",
+    "wind_speed",
+    "rain",
+    "hour",
+    "day_of_week",
+    "month",
+    "year",
+    "is_weekend",
+    "season"
+  ],
+  "algorithm": "random_forest"
+}
